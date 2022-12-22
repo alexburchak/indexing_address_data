@@ -1,0 +1,25 @@
+version: "3.3"
+
+services:
+  postgres:
+    image: postgres:12
+    restart: always
+    volumes:
+      - ./init-database.sql:/docker-entrypoint-initdb.d/init-database.sql
+      - ./dump:/docker-entrypoint-initdb.d/dump
+    tmpfs:
+      - /var/lib/postgresql/data:rw
+    environment:
+      - POSTGRES_USER=demo
+      - POSTGRES_PASSWORD=demo
+      - POSTGRES_DB=demo
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    ports:
+      - 15432:5432
+    command:
+      - "postgres"
+      - "-c"
+      - "fsync=off"
